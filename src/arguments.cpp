@@ -261,41 +261,37 @@ void ArgParser::parseAll() {
 }
 
 void ArgParser::handleFlag() {
-    const char* pathOrName = expectArg();
-    if (pathOrName == nullptr) {
+    const char* arg = expectArg();
+    if (arg == nullptr) {
         return;
     }
-    std::string finalPath = pathOrName;
-    FILE* f = fopen(pathOrName, "rb");
-    if (f == nullptr) {
-        std::string assetPath = m_conf.assetsDir + "/" + pathOrName + ".png";
-        finalPath = assetPath;
-        f = fopen(assetPath.c_str(), "rb");
+
+    std::string path = arg;
+    if (!std::filesystem::exists(path)) {
+        path = m_conf.assetsDir + "/" + path + ".png";
     }
-    if (f == nullptr) {
+    if (!std::filesystem::exists(path)) {
+        std::string fileName = std::string(arg) + ".png";
         for (const auto& entry : std::filesystem::recursive_directory_iterator(m_conf.assetsDir)) {
-            if (entry.path().extension() != ".png" || entry.path().stem() != pathOrName) {
-                continue;
-            }
-            finalPath = entry.path().string();
-            f = fopen(entry.path().string().c_str(), "rb");
-            if (f != nullptr) {
+            if (entry.path().filename() == fileName) {
+                path = entry.path().string();
                 break;
             }
         }
     }
-    if (f == nullptr) {
-        std::cout << "ERROR: Can't find image with path or file with name: " << pathOrName << "\n";
+    if (!std::filesystem::exists(path)) {
+        std::cout << "ERROR: Couldn't find file `" << arg << "`\n";
         m_shouldExitFail = true;
         return;
     }
 
-    int width, height, origChannels;
-    uint8_t* stbiBuffer = stbi_load_from_file(
-        f, &width, &height, &origChannels, IMG_BUFFER_CHANNELS
+    int width, height;
+    int origChannels;
+    uint8_t* stbiBuffer = stbi_load(
+        path.c_str(), &width, &height, &origChannels, IMG_BUFFER_CHANNELS
     );
     if (stbiBuffer == nullptr) {
-        std::cout << "ERROR: Can't load image from file: " << finalPath << "\n";
+        std::cout << "ERROR: Couldn't load image `" << path << "`\n";
         m_shouldExitFail = true;
         return;
     }
