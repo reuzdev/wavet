@@ -42,7 +42,7 @@ cmake --build . --config Release
 
 4. Install (Optional)
 ```
-cmake --install .
+sudo cmake --install .
 ```
 
 NOTE: Omit `-DCMAKE_BUILD_TYPE=Release` and `--config Release` if you want a Debug build. Also the former doesn't have an effect on MSVC and the latter doesn't have an effect on Linux/MinGW, so you can omit them on their corresponding platforms.
