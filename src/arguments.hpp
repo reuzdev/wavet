@@ -2,7 +2,6 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
-#include "stb_image.h"
 #include "image.hpp"
 #include "animation.hpp"
 

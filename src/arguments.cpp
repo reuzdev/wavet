@@ -1,17 +1,21 @@
+#include "arguments.hpp"
+#include <iostream>
+#include <filesystem>
+#include <string>
+#include "stb_image.h"
+#include "image.hpp"
+#include "animation.hpp"
+#include "config.hpp"
 #ifdef _WIN32
     #include <windows.h>
 #else
     #include <unistd.h>
     #include <limits.h>
 #endif
-#include "arguments.hpp"
-#include "config.hpp"
-
-// TODO: Make it so error message is reported and error flag set by consumeArg
-// and tryStrToInt and tryStrToFloat. You just return early if necessary.
 
 ArgParser::ArgParser(int argc, const char** argv)
-    : m_idx(1), m_argc(argc), m_argv(argv), m_shouldExitSuccess(false), m_shouldExitFail(false), m_wasCustomWaveAdded(false) {
+    : m_idx(1), m_argc(argc), m_argv(argv), m_shouldExitSuccess(false)
+    , m_shouldExitFail(false), m_wasCustomWaveAdded(false) {
     setDefaults();
     setAssetsDir();
     parseAll();
@@ -97,7 +101,8 @@ bool ArgParser::expectInt(int* outVal) {
     for (; *c != '\0'; c++) {
         if (!isdigit(*c)) {
             m_shouldExitFail = true;
-            std::cout << "ERROR: Expected valid integer after `" << m_label << "`, got `" << arg << "`\n";
+            std::cout << "ERROR: Expected valid integer after `"
+                << m_label << "`, got `" << arg << "`\n";
             return false;
         }
     }
@@ -180,6 +185,7 @@ void ArgParser::setAssetsDir() {
         pathBuff[pathLen] = '\0';
     }
 #endif
+
     std::filesystem::path assetsDir = std::filesystem::path(pathBuff).parent_path() / "assets";
     if (std::filesystem::exists(assetsDir)) {
         m_conf.assetsDir = assetsDir.string();
@@ -199,7 +205,8 @@ void ArgParser::setAssetsDir() {
 
 void ArgParser::checkRequiredFields() {
     if (m_conf.flag.getHeight() == 0) {
-        std::cout << "ERROR: A flag must be provided with --flag <name or file path>. See available flags with --list\n";
+        std::cout << "ERROR: A flag must be provided with --flag"
+            "<name or file path>. See available flags with --list\n";
         m_shouldExitFail = true;
     }
 }
@@ -253,7 +260,6 @@ void ArgParser::parseAll() {
     }
 }
 
-// Not my proudest code
 void ArgParser::handleFlag() {
     const char* pathOrName = expectArg();
     if (pathOrName == nullptr) {
@@ -285,7 +291,9 @@ void ArgParser::handleFlag() {
     }
 
     int width, height, origChannels;
-    uint8_t* stbiBuffer = stbi_load_from_file(f, &width, &height, &origChannels, IMG_BUFFER_CHANNELS);
+    uint8_t* stbiBuffer = stbi_load_from_file(
+        f, &width, &height, &origChannels, IMG_BUFFER_CHANNELS
+    );
     if (stbiBuffer == nullptr) {
         std::cout << "ERROR: Can't load image from file: " << finalPath << "\n";
         m_shouldExitFail = true;
@@ -322,7 +330,8 @@ void ArgParser::handleAmbient() {
         return;
     }
     if (value < 0 || value > 1) {
-        std::cout << "ERROR: Ambient light value (`" << value << "` after `" << m_label << "`) should be a value from 0 to 1\n";
+        std::cout << "ERROR: Ambient light value (`" << value << "` after `"
+            << m_label << "`) should be a value from 0 to 1\n";
         m_shouldExitFail = true;
         return;
     }

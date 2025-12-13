@@ -49,11 +49,11 @@ void TerminalController::setupTerminal() {
         // TODO: Handle the error
     }
 #endif
-    std::cout << CSI "?1049h" << CSI "?25l" << std::flush;
+    std::cout << ANSI_ENTER_ALT_BUFFER << ANSI_HIDE_CURSOR << std::flush;
 }
 
 void TerminalController::cleanupTerminal() {
-    std::cout << CSI "?1049l" << CSI "?25h" << std::flush;
+    std::cout << ANSI_EXIT_ALT_BUFFER << ANSI_SHOW_CURSOR << std::flush;
 #ifdef _WIN32
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleMode(hOut, m_origOutMode);

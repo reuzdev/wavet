@@ -17,7 +17,7 @@ struct Color {
 class Image {
 public:
     Image() = default;
-    Image(size_t p_width, size_t p_height, Color fill = Color());
+    Image(size_t width, size_t height, Color fill = Color());
     Image(uint8_t* stdiBuffer, size_t width, size_t height);
 
     void resize(size_t p_width, size_t p_height, Color fill = Color());

@@ -13,6 +13,11 @@
 #define CSI "\x1b["
 #define OSC "\x1b]"
 
+#define ANSI_ENTER_ALT_BUFFER CSI "?1049h"
+#define ANSI_EXIT_ALT_BUFFER  CSI "?1049l"
+#define ANSI_HIDE_CURSOR      CSI "?25l"
+#define ANSI_SHOW_CURSOR      CSI "?25h"
+
 class TerminalController {
 public:
     TerminalController(TerminalController& other) = delete;

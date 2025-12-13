@@ -5,6 +5,7 @@
 
 #define PI 3.14159265358979323846
 #define ROWS_PER_CHAR 2
+
 #ifdef _WIN32
     #define FULL_BLOCK_CHAR  static_cast<char>(219)
     #define TOP_HALF_CHAR    static_cast<char>(223)
@@ -49,9 +50,28 @@ public:
         float ambientLight,
         float time
     );
-    void drawSceneFlagOnly(const Image& img, const WaveConfig& waveConfig, bool centered, float ambientLight, float time);
-    void drawSceneFlagAndPole(const Image& img, const WaveConfig& waveConfig, float hPosNormal, float vPosNormal, float ambientLight, float time);
-    void drawSceneFlagPoleAndMsg(const Image& img, const WaveConfig& waveConfg, float ambientLight, const std::string& msg, float time);
+    void drawSceneFlagOnly(
+        const Image& img,
+        const WaveConfig& waveConfig,
+        bool centered,
+        float ambientLight,
+        float time
+    );
+    void drawSceneFlagAndPole(
+        const Image& img,
+        const WaveConfig& waveConfig,
+        float hPosNormal,
+        float vPosNormal,
+        float ambientLight,
+        float time
+    );
+    void drawSceneFlagPoleAndMsg(
+        const Image& img,
+        const WaveConfig& waveConfg,
+        float ambientLight,
+        const std::string& msg,
+        float time
+    );
     void outputPixelPair(std::pair<size_t, size_t> topPixel);
 private:
     Image m_prevCanvas;

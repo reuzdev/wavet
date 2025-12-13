@@ -44,7 +44,6 @@ int main(int argc, const char** argv) {
             canvas.drawSceneFlagOnly(conf.flag, conf.waveConfig, conf.centeredScene, conf.ambientLight, t);
         }
         canvas.endDrawing();
-        term.flush();
         Sleep(1000/fps);
         t += 1.0f/fps;
     }

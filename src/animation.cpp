@@ -1,6 +1,8 @@
-#include <cmath>
-#include "terminal.hpp"
 #include "animation.hpp"
+#include <cmath>
+#include <utility>
+#include "image.hpp"
+#include "terminal.hpp"
 
 SineWave::SineWave(float amplitude, float wavelength, float speed, float phase)
     : amplitude(amplitude), wavelength(wavelength), speed(speed), phase(phase) {}
@@ -99,7 +101,8 @@ void Canvas::drawWavedImage(
 
         for (size_t i = 0; i < waveConfig.waves.size(); i++) {
             const SineWave& w = waveConfig.waves.at(i);
-            float secNextAngle = 2 * static_cast<float>(PI) * (x + 2 - time * waveConfig.speedMultiplier * w.speed) / w.wavelength + w.phase;
+            float secNextAngle = 2 * static_cast<float>(PI)
+                * (x + 2 - time * waveConfig.speedMultiplier * w.speed) / w.wavelength + w.phase;
             yShiftSecNext += w.amplitude * sin(secNextAngle);
         }
 
@@ -135,19 +138,36 @@ void Canvas::drawWavedImage(
     }
 }
 
-void Canvas::drawSceneFlagOnly(const Image& img, const WaveConfig& waveConfig, bool centered, float ambientLight, float time) {
+void Canvas::drawSceneFlagOnly(
+    const Image& img,
+    const WaveConfig& waveConfig,
+    bool centered,
+    float ambientLight,
+    float time
+) {
     std::pair<int, int> origin(0, 0);
     if (centered) {
         origin.first = static_cast<int>(m_currCanvas.getWidth()/2 - img.getWidth()/2);
-        origin.second = static_cast<int>(m_currCanvas.getHeight()/2 - img.getHeight()/2 - waveConfig.getTotalAmpl());
+        origin.second = static_cast<int>(
+            m_currCanvas.getHeight()/2 - img.getHeight()/2 - waveConfig.getTotalAmpl()
+        );
     }
     drawWavedImage(img, origin, waveConfig, ambientLight, time);
 }
 
-void Canvas::drawSceneFlagAndPole(const Image& img, const WaveConfig& WaveConfig, float hPosNormal, float vPosNormal, float ambientLight, float time) {
+void Canvas::drawSceneFlagAndPole(
+    const Image& img,
+    const WaveConfig& WaveConfig,
+    float hPosNormal,
+    float vPosNormal,
+    float ambientLight,
+    float time
+) {
     std::pair<int, int> origin(
         static_cast<int>(m_currCanvas.getWidth() * hPosNormal - img.getWidth()/2),
-        static_cast<int>(m_currCanvas.getHeight() * vPosNormal - img.getHeight()/2 - WaveConfig.getTotalAmpl())
+        static_cast<int>(
+            m_currCanvas.getHeight() * vPosNormal - img.getHeight()/2 - WaveConfig.getTotalAmpl()
+        )
     );
     drawWavedImage(img, origin, WaveConfig, ambientLight, time);
     drawRect(
@@ -162,7 +182,13 @@ void Canvas::drawSceneFlagAndPole(const Image& img, const WaveConfig& WaveConfig
     );
 }
 
-void Canvas::drawSceneFlagPoleAndMsg(const Image& img, const WaveConfig& waveConfg, float ambientLight, const std::string& msg, float time) {
+void Canvas::drawSceneFlagPoleAndMsg(
+    const Image& img,
+    const WaveConfig& waveConfig,
+    float ambientLight,
+    const std::string& msg,
+    float time
+) {
     size_t maxLineLen = m_term.getSize().first / 3 * 2 - 2;
     std::vector<std::pair<size_t, size_t>> lnBounds;
 
@@ -197,7 +223,7 @@ void Canvas::drawSceneFlagPoleAndMsg(const Image& img, const WaveConfig& waveCon
         lineStart = lineEnd;
     }
 
-    drawSceneFlagAndPole(img, waveConfg, 0.34f, 0.34f, ambientLight, time);
+    drawSceneFlagAndPole(img, waveConfig, 0.34f, 0.34f, ambientLight, time);
     m_term.usePreferredFGandBG();
 
     std::pair<size_t, size_t> termSize = m_term.getSize();

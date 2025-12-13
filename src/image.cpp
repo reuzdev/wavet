@@ -1,5 +1,7 @@
-#include <cassert>
 #include "image.hpp"
+#include <cassert>
+#include <vector>
+#include <cstdint>
 #include "stb_image.h"
 
 Color::Color()
@@ -23,7 +25,7 @@ Image::Image(size_t width, size_t height, Color fill)
 
 Image::Image(uint8_t* stdiBuffer, size_t width, size_t height)
     : m_width(width), m_height(height) {
-    assert(stdiBuffer != NULL && "Buffer must be verified before calling this function!\n");
+    assert(stdiBuffer != nullptr && "Buffer must be verified before calling this function!\n");
 
     m_pixels.resize(m_width * m_height);
     for (size_t i = 0; i < m_width * m_height; i++) {
@@ -39,10 +41,10 @@ Image::Image(uint8_t* stdiBuffer, size_t width, size_t height)
     stbi_image_free(stdiBuffer);
 }
 
-void Image::resize(size_t p_width, size_t p_height, Color fill) {
-    m_pixels.resize(p_width * p_height, fill);
-    m_width = p_width;
-    m_height = p_height;
+void Image::resize(size_t width, size_t height, Color fill) {
+    m_pixels.resize(width * height, fill);
+    m_width = width;
+    m_height = height;
 }
 
 void Image::clear(Color fill) {
