@@ -194,7 +194,7 @@ void ArgParser::setAssetsDir() {
     }
 #endif
 
-    m_conf.assetsDir = std::filesystem::current_path();
+    m_conf.assetsDir = std::filesystem::current_path().string();
 }
 
 void ArgParser::checkRequiredFields() {

@@ -201,14 +201,14 @@ void Canvas::drawSceneFlagPoleAndMsg(const Image& img, const WaveConfig& waveCon
     m_term.usePreferredFGandBG();
 
     std::pair<size_t, size_t> termSize = m_term.getSize();
-    int textOriginY = termSize.second / 3 * 2 - lnBounds.size() / 2 + 1;
+    int textOriginY = static_cast<int>(termSize.second / 3 * 2 - lnBounds.size() / 2 + 1);
     if (textOriginY + lnBounds.size() > termSize.second) {
-        textOriginY = termSize.second - static_cast<int>(lnBounds.size()) - 1;
+        textOriginY = static_cast<int>(termSize.second - lnBounds.size() - 1);
     }
     if (textOriginY < 1) {
         textOriginY = 1;
     }
-    int textCenterX = termSize.first / 3 * 2 + 1;
+    int textCenterX = static_cast<int>(termSize.first / 3 * 2 + 1);
 
     for (size_t i = 0; i < lnBounds.size(); i++) {
         size_t lineLen = lnBounds.at(i).second - lnBounds.at(i).first;
