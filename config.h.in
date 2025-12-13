@@ -1,2 +1,0 @@
-#pragma once
-#define INSTALLED_ASSET_PATH "@APP_ASSET_DIR@"

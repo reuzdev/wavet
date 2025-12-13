@@ -4,8 +4,8 @@ project(wavet LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
-set(CONFIG_HEADER_IN "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in")
-set(CONFIG_HEADER_OUT "${CMAKE_CURRENT_BINARY_DIR}/config.h")
+set(CONFIG_HEADER_IN "${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in")
+set(CONFIG_HEADER_OUT "${CMAKE_CURRENT_BINARY_DIR}/config.hpp")
 
 add_executable(${PROJECT_NAME}
     src/main.cpp

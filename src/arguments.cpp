@@ -5,7 +5,7 @@
     #include <limits.h>
 #endif
 #include "arguments.hpp"
-#include "config.h"
+#include "config.hpp"
 
 // TODO: Make it so error message is reported and error flag set by consumeArg
 // and tryStrToInt and tryStrToFloat. You just return early if necessary.
