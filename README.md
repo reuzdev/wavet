@@ -41,11 +41,19 @@ cmake --build . --config Release
 ```
 
 4. Install (Optional)
+
+On Linux/MinGW:
 ```
 sudo cmake --install .
 ```
+On Windows (MSVC):
+```
+sudo cmake --install . --config Release
+```
+Windows has `sudo` but you need to activate it. You can also just run your terminal as admin instead.
 
-NOTE: Omit `-DCMAKE_BUILD_TYPE=Release` and `--config Release` if you want a Debug build. Also the former doesn't have an effect on MSVC and the latter doesn't have an effect on Linux/MinGW, so you can omit them on their corresponding platforms.
+> [!NOTE]
+> Omit `-DCMAKE_BUILD_TYPE=Release` and `--config Release` if you want a Debug build. Also you can omit the former in MSVC and the latter in Linux/MinGW, as they have no effect in said platforms. I just included both to make it more concise.
 
 ## Usage
 Use `--help` to learn how to use wavet.
