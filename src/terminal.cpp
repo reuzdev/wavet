@@ -1,4 +1,7 @@
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
 #include <cassert>
 #ifdef _WIN32
     #include <windows.h>

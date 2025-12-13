@@ -3,10 +3,10 @@
 #include <sstream>
 #include <vector>
 #ifdef _WIN32
-#include <windows.h>
+    #include <windows.h>
 #endif
-#include <utility>
-#include "image.hpp"
+    #include <utility>
+    #include "image.hpp"
 #include "stb_image.h"
 
 #define ESC "\x1b"
