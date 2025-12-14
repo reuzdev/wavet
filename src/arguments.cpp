@@ -206,7 +206,7 @@ void ArgParser::setAssetsDir() {
 void ArgParser::checkRequiredFields() {
     if (m_conf.flag.getHeight() == 0) {
         std::cout << "ERROR: A flag must be provided with --flag"
-            "<name or file path>. See available flags with --list\n";
+            " <name or file path>. See available flags with --list\n";
         m_shouldExitFail = true;
     }
 }
