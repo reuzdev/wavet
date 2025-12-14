@@ -13,7 +13,7 @@
 
 ## About
 <div align="center">
-    <img src="docs/images/screenshot_turkey_centered_blue_bg.png" alt="Screenshot">
+    <img src="docs/images/wavet_demo_loop.gif" alt="Wavet Demo Gif">
 </div>
 
 Wavet (stylized as wavet) is a terminal app for playing flag waving animation. It is intended for small pixel art flags and comes with flags designed by [R74n](https://www.youtube.com/@R74n) and used with their permission (more on that [here](assets/R74n/README.md)), and several flags I designed myself. It is written in C++17 using Win32 API for Windows and POSIX standard library for Linux for handling terminal-related stuff, and `stb_image.h` for loading images.
