@@ -98,16 +98,22 @@ void Canvas::drawWavedImage(
         yShiftCurr = yShiftNext;
         yShiftNext = yShiftSecNext;
         yShiftSecNext = 0;
+        int secNextX = x + 2;
 
         for (size_t i = 0; i < waveConfig.waves.size(); i++) {
             const SineWave& w = waveConfig.waves.at(i);
             float secNextAngle = 2 * static_cast<float>(PI)
-                * (x + 2 - time * waveConfig.speedMultiplier * w.speed) / w.wavelength + w.phase;
-            yShiftSecNext += w.amplitude * sin(secNextAngle);
+                * (secNextX - time * waveConfig.speedMultiplier * w.speed) / w.wavelength + w.phase;
+            yShiftSecNext += w.amplitude * sin(secNextAngle) * waveConfig.amplitudeMultiplier;
         }
 
         if (waveConfig.keepLeftFixed) {
-            yShiftSecNext *= static_cast<float>(x + 2) / img.getWidth() * (x + 2 < 0 ? -1 : 1);
+            yShiftSecNext *= static_cast<float>(secNextX) / (img.getWidth() - 1)
+                * (secNextX < 0 ? -1 : 1);
+            // TODO: Make this a flag in WaveConfig
+            float xNormal = static_cast<float>(secNextX) / (img.getWidth() - 1);
+            float gravity = 1.0f * xNormal * waveConfig.gravityMultiplier;
+            yShiftNext += gravity;
         }
 
         if (x < 0) {
@@ -257,17 +263,17 @@ void Canvas::outputPixelPair(std::pair<size_t, size_t> topPixel) {
         m_term.getStream() << TOP_HALF_CHAR;
     }
     else if (topColor.a) {
-        m_term.resetBG();
+        m_term.usePreferredFGandBG();
         m_term.setFG(topColor);
         m_term.getStream() << TOP_HALF_CHAR;
     }
     else if (bottomColor.a) {
-        m_term.resetBG();
+        m_term.usePreferredFGandBG();
         m_term.setFG(bottomColor);
         m_term.getStream() << BOTTOM_HALF_CHAR;
     }
     else {
-        m_term.resetBG();
+        m_term.usePreferredFGandBG();
         m_term.getStream() << " ";
     }
 }

@@ -34,7 +34,7 @@ Image::Image(uint8_t* stdiBuffer, size_t width, size_t height)
             stdiBuffer[byteIdx],
             stdiBuffer[byteIdx + 1],
             stdiBuffer[byteIdx + 2],
-            stdiBuffer[byteIdx + 3] > UINT8_MAX / 2
+            stdiBuffer[byteIdx + 3] != 0
         );
         m_pixels[i] = color;
     }

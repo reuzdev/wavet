@@ -28,6 +28,8 @@ struct SineWave {
 struct WaveConfig {
     std::vector<SineWave> waves;
     float speedMultiplier;
+    float gravityMultiplier;
+    float amplitudeMultiplier;
     size_t baseSize;
     bool keepLeftFixed;
 

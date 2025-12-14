@@ -48,6 +48,8 @@ private:
     void handleBackground();
     void handleTextColor();
     void handleSpeed();
+    void handleGravity();
+    void handleAmplitude();
     void handleWave();
     void handleMessage();
 };

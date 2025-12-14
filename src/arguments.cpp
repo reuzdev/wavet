@@ -13,6 +13,9 @@
     #include <limits.h>
 #endif
 
+// TODO: Instead of having seperate but identical functions for multiple
+// settings create general use functions like handleFloat(float* outVal)
+
 ArgParser::ArgParser(int argc, const char** argv)
     : m_idx(1), m_argc(argc), m_argv(argv), m_shouldExitSuccess(false)
     , m_shouldExitFail(false), m_wasCustomWaveAdded(false) {
@@ -137,11 +140,13 @@ void ArgParser::printHelp() {
         "  --flag, -f {name or path}           Flag to wave\n"
         "  --list, -l                          List available flag names\n"
         "  --float, -F                         Do not fix the left side of the flag\n"
+        "  --gravity, -g {scale}               Set gravity multiplier\n"
+        "  --amplitude, -A {scale}             Set amplitude multiplier"
         "  --ambient, -a {0 to 1 (e.g 0.5)}    Set ambient light\n"
         "  --background, -b {r} {g} {b}        Set background color\n"
-        "  --speed, -s {scale}                 Speed multiplier\n"
+        "  --speed, -s {scale}                 Set speed multiplier\n"
         "  --wave, -w {ampl.} {wavelen.} {phase} {speed}\n"
-        "                                      Add wave. Can use multiple times.\n"
+        "                                      Add wave. Can be used multiple times\n"
         "  --simple, -S                        Draw flag only\n"
         "  --center, -c                        Center flag (and pole)\n"
         "  --message, -m {text}                Print a message. Overrides -S and -c\n"
@@ -158,6 +163,8 @@ void ArgParser::setDefaults() {
         SineWave(1, 93, 30)
     };
     waveConfig.speedMultiplier = 1;
+    waveConfig.gravityMultiplier = 1;
+    waveConfig.amplitudeMultiplier = 1;
     waveConfig.keepLeftFixed = true;
     waveConfig.baseSize = 16;
 
@@ -242,6 +249,12 @@ void ArgParser::parseAll() {
         }
         else if (m_label == "--speed" || m_label == "-s") {
             handleSpeed();
+        }
+        else if (m_label == "--gravity" || m_label == "-g") {
+            handleGravity();
+        }
+        else if (m_label == "--amplitude" || m_label == "-A") {
+            handleAmplitude();
         }
         else if (m_label == "--wave" || m_label == "-w") {
             handleWave();
@@ -359,6 +372,24 @@ void ArgParser::handleSpeed() {
     }
 
     m_conf.waveConfig.speedMultiplier = value;
+}
+
+void ArgParser::handleGravity() {
+    float value;
+    if (!expectFloat(&value)) {
+        return;
+    }
+
+    m_conf.waveConfig.gravityMultiplier = value;
+}
+
+void ArgParser::handleAmplitude() {
+    float value;
+    if (!expectFloat(&value)) {
+        return;
+    }
+
+    m_conf.waveConfig.amplitudeMultiplier = value;
 }
 
 void ArgParser::handleWave() {
