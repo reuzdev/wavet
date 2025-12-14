@@ -63,7 +63,7 @@ else()
     install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
-    install(DIRECTORY assets/
+    install(DIRECTORY assets
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}
         PATTERN ".DS_Store" EXCLUDE
     )
