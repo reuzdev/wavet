@@ -14,9 +14,6 @@
     #include <limits.h>
 #endif
 
-// TODO: Instead of having seperate but identical functions for multiple
-// settings create general use functions like handleFloat(float* outVal)
-
 ArgParser::ArgParser(int argc, const char** argv)
     : m_idx(1), m_argc(argc), m_argv(argv), m_shouldExitSuccess(false)
     , m_shouldExitFail(false), m_wasCustomWaveAdded(false) {
@@ -149,8 +146,9 @@ void ArgParser::printHelp() {
         "  --wave, -w {ampl.} {wavelen.} {phase} {speed}\n"
         "                                      Add wave. Can be used multiple times\n"
         "  --simple, -S                        Draw flag only\n"
-        "  --center, -c                        Center flag (and pole)\n"
-        "  --message, -m {text}                Print a message. Overrides -S and -c\n"
+        "  --vertical-pos, -V {0 to 100}       Vertical position of the flag's center\n"
+        "  --horizontal-pos, -H {0 to 100}     Horizontal position of the flag's center\n"
+        "  --message, -m {text}                Print a message. Overrides -S, -V and -H\n"
         "  --text-color, -t {r} {g} {b}        Set text color for message\n"
     ;
     std::cout << msg;
@@ -172,11 +170,11 @@ void ArgParser::setDefaults() {
     m_conf.flag = Image();
     m_conf.ambientLight = 0.1f;
     m_conf.bg = Color();
+    m_conf.textColor = Color(255, 255, 255);
+    m_conf.normalPos = std::pair<float, float>(0.5f, 0.5f);
     m_conf.fancyScene = true;
-    m_conf.centeredScene = false;
     m_conf.msg = std::string();
     m_conf.waveConfig = waveConfig;
-    m_conf.textColor = Color(255, 255, 255);
 }
 
 void ArgParser::setAssetsDir() {
@@ -239,32 +237,49 @@ void ArgParser::parseAll() {
         else if (m_label == "--simple" || m_label == "-S") {
             m_conf.fancyScene = false;
         }
-        else if (m_label == "--center" || m_label == "-c") {
-            m_conf.centeredScene = true;
-        }
         else if (m_label == "--ambient" || m_label == "-a") {
-            handleAmbient();
+            if (!expectFloat(&m_conf.ambientLight)) {
+                return;
+            }
+            if (m_conf.ambientLight < 0 || m_conf.ambientLight > 1) {
+                std::cout << "ERROR: Ambient light value after "
+                    << m_label << " must be from 0 to 1\n";
+                m_shouldExitFail = true;
+            }
         }
         else if (m_label == "--background" || m_label == "-b") {
-            handleBackground();
+            expectColor(&m_conf.bg);
         }
         else if (m_label == "--speed" || m_label == "-s") {
-            handleSpeed();
+            expectFloat(&m_conf.waveConfig.speedMultiplier);
         }
         else if (m_label == "--gravity" || m_label == "-g") {
-            handleGravity();
+            expectFloat(&m_conf.waveConfig.gravityMultiplier);
         }
         else if (m_label == "--amplitude" || m_label == "-A") {
-            handleAmplitude();
+            expectFloat(&m_conf.waveConfig.amplitudeMultiplier);
+        }
+        else if (m_label == "--horizontal-pos" || m_label == "-H") {
+            if (expectFloat(&m_conf.normalPos.first)) {
+                m_conf.normalPos.first /= 100;
+            }
+        }
+        else if (m_label == "--vertical-pos" || m_label == "-V") {
+            if (expectFloat(&m_conf.normalPos.second)) {
+                m_conf.normalPos.second /= 100;
+            }
         }
         else if (m_label == "--wave" || m_label == "-w") {
             handleWave();
         }
         else if (m_label == "--message" || m_label == "-m") {
-            handleMessage();
+            if (const char* arg = expectArg()) {
+                m_conf.msg = std::string(arg);
+                m_conf.normalPos = std::pair<float, float>(0.33f, 0.33f);
+            }
         }
         else if (m_label == "--text-color" || m_label == "-t") {
-            handleTextColor();
+            expectColor(&m_conf.textColor);
         }
         else {
             std::cout << "ERROR: Unexpected token " << m_label << "\n";
@@ -353,65 +368,6 @@ void ArgParser::handleList() {
     m_shouldExitSuccess = true;
 }
 
-void ArgParser::handleAmbient() {
-    float value;
-    if (!expectFloat(&value)) {
-        return;
-    }
-    if (value < 0 || value > 1) {
-        std::cout << "ERROR: Ambient light value (`" << value << "` after `"
-            << m_label << "`) should be a value from 0 to 1\n";
-        m_shouldExitFail = true;
-        return;
-    }
-    m_conf.ambientLight = value;
-}
-
-void ArgParser::handleBackground() {
-    Color color;
-    if (!expectColor(&color)) {
-        return;
-    }
-
-    m_conf.bg = color;
-}
-
-void ArgParser::handleTextColor() {
-    Color color;
-    if (!expectColor(&color)) {
-        return;
-    }
-
-    m_conf.textColor = color;
-}
-
-void ArgParser::handleSpeed() {
-    float value;
-    if (!expectFloat(&value)) {
-        return;
-    }
-
-    m_conf.waveConfig.speedMultiplier = value;
-}
-
-void ArgParser::handleGravity() {
-    float value;
-    if (!expectFloat(&value)) {
-        return;
-    }
-
-    m_conf.waveConfig.gravityMultiplier = value;
-}
-
-void ArgParser::handleAmplitude() {
-    float value;
-    if (!expectFloat(&value)) {
-        return;
-    }
-
-    m_conf.waveConfig.amplitudeMultiplier = value;
-}
-
 void ArgParser::handleWave() {
     static const size_t valCount = 4;
     float values[valCount];
@@ -430,13 +386,4 @@ void ArgParser::handleWave() {
     }
 
     m_conf.waveConfig.waves.emplace_back(SineWave(values[0], values[1], values[2], values[3]));
-}
-
-void ArgParser::handleMessage() {
-    const char* valueArg = expectArg();
-    if (valueArg == nullptr) {
-        return;
-    }
-
-    m_conf.msg = std::string(valueArg);
 }

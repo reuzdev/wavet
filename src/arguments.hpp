@@ -13,7 +13,7 @@ struct AppConfig {
     Color textColor;
     WaveConfig waveConfig;
     bool fancyScene;
-    bool centeredScene;
+    std::pair<float, float> normalPos;
     std::string msg;
 };
 
@@ -44,12 +44,5 @@ private:
     void parseAll();
     void handleFlag();
     void handleList();
-    void handleAmbient();
-    void handleBackground();
-    void handleTextColor();
-    void handleSpeed();
-    void handleGravity();
-    void handleAmplitude();
     void handleWave();
-    void handleMessage();
 };

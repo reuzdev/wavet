@@ -147,17 +147,19 @@ void Canvas::drawWavedImage(
 void Canvas::drawSceneFlagOnly(
     const Image& img,
     const WaveConfig& waveConfig,
-    bool centered,
+    float hPosNormal,
+    float vPosNormal,
     float ambientLight,
     float time
 ) {
-    std::pair<int, int> origin(0, 0);
-    if (centered) {
-        origin.first = static_cast<int>(m_currCanvas.getWidth()/2 - img.getWidth()/2);
-        origin.second = static_cast<int>(
-            m_currCanvas.getHeight()/2 - img.getHeight()/2 - waveConfig.getTotalAmpl()
-        );
-    }
+    std::pair<int, int> origin(
+        static_cast<int>(
+            m_currCanvas.getWidth() * hPosNormal - img.getWidth()/2
+        ),
+        static_cast<int>(
+            m_currCanvas.getHeight() * vPosNormal - img.getHeight()/2 - waveConfig.getTotalAmpl()
+        )
+    );
     drawWavedImage(img, origin, waveConfig, ambientLight, time);
 }
 
@@ -170,7 +172,9 @@ void Canvas::drawSceneFlagAndPole(
     float time
 ) {
     std::pair<int, int> origin(
-        static_cast<int>(m_currCanvas.getWidth() * hPosNormal - img.getWidth()/2),
+        static_cast<int>(
+            m_currCanvas.getWidth() * hPosNormal - img.getWidth()/2
+        ),
         static_cast<int>(
             m_currCanvas.getHeight() * vPosNormal - img.getHeight()/2 - WaveConfig.getTotalAmpl()
         )

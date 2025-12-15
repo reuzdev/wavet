@@ -55,7 +55,8 @@ public:
     void drawSceneFlagOnly(
         const Image& img,
         const WaveConfig& waveConfig,
-        bool centered,
+        float hPosNormal,
+        float vPosNormal,
         float ambientLight,
         float time
     );

@@ -33,15 +33,33 @@ int main(int argc, const char** argv) {
     while (!term.shouldExit()) {
         canvas.beginDrawing(conf.bg);
         if (!conf.msg.empty()) {
-            canvas.drawSceneFlagPoleAndMsg(conf.flag, conf.waveConfig, conf.ambientLight, conf.msg, t);
+            canvas.drawSceneFlagPoleAndMsg(
+                conf.flag,
+                conf.waveConfig,
+                conf.ambientLight,
+                conf.msg,
+                t
+            );
         }
         else if (conf.fancyScene) {
-            static float hPos = conf.centeredScene ? 0.5f : 0.34f;
-            static float vPos = conf.centeredScene ? 0.5f : 0.34f;
-            canvas.drawSceneFlagAndPole(conf.flag, conf.waveConfig, hPos, vPos, conf.ambientLight, t);
+            canvas.drawSceneFlagAndPole(
+                conf.flag,
+                conf.waveConfig,
+                conf.normalPos.first,
+                conf.normalPos.second,
+                conf.ambientLight,
+                t
+            );
         }
         else {
-            canvas.drawSceneFlagOnly(conf.flag, conf.waveConfig, conf.centeredScene, conf.ambientLight, t);
+            canvas.drawSceneFlagOnly(
+                conf.flag,
+                conf.waveConfig,
+                conf.normalPos.first,
+                conf.normalPos.second,
+                conf.ambientLight,
+                t
+            );
         }
         canvas.endDrawing();
         Sleep(1000/fps);
