@@ -314,6 +314,7 @@ void ArgParser::handleFlag() {
 }
 
 void ArgParser::handleList() {
+    bool foundFlags = false;
     for (const auto& entry : std::filesystem::directory_iterator(m_conf.assetsDir)) {
         if (!entry.is_directory()) {
             continue;
@@ -333,11 +334,22 @@ void ArgParser::handleList() {
             std::sort(files.begin(), files.end());
             for (const auto& file : files) {
                 if (file.extension() == ".png") {
+                    foundFlags = true;
                     std::cout << "      * " << file.stem().string() << "\n";
                 }
             }
         }
     }
+
+    if (foundFlags) {
+        std::cout << "\nTip: If multiple flags share the same name,"
+            " use full name like R74n/country/turkey.\n";
+    }
+    else {
+        std::cout << "NOTE: Can't find any flags in "
+            << m_conf.assetsDir << ", try reinstalling.\n";
+    }
+
     m_shouldExitSuccess = true;
 }
 
