@@ -2,6 +2,7 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
+#include <algorithm>
 #include "stb_image.h"
 #include "image.hpp"
 #include "animation.hpp"
@@ -323,9 +324,16 @@ void ArgParser::handleList() {
                 continue;
             }
             std::cout << "  " << categoryDir.path().stem().string() << "/\n";
-            for (const auto& flagFile : std::filesystem::directory_iterator(categoryDir)) {
-                if (flagFile.path().extension() == ".png") {
-                    std::cout << "      * " << flagFile.path().stem().string() << "\n";
+            std::vector<std::filesystem::path> files;
+            std::copy(
+                std::filesystem::directory_iterator(categoryDir),
+                std::filesystem::directory_iterator(),
+                std::back_inserter(files)
+            );
+            std::sort(files.begin(), files.end());
+            for (const auto& file : files) {
+                if (file.extension() == ".png") {
+                    std::cout << "      * " << file.stem().string() << "\n";
                 }
             }
         }
