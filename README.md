@@ -46,6 +46,10 @@ On Linux/MinGW:
 ```
 sudo cmake --install .
 ```
+On macOS:
+```
+sudo cmake --install .
+```
 On Windows (MSVC):
 ```
 sudo cmake --install . --config Release
